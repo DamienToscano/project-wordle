@@ -16,11 +16,16 @@ function GuessInput() {
         >
             <label htmlFor="guess-input">Enter guess:</label>
             <input
+                required
                 id="guess-input"
                 type="text"
-                pattern="\w{5,5}"
+                pattern="[a-zA-Z]{5}"
+                title='Please enter a 5-letter word.'
                 value={guess}
-                onChange={event => setGuess(event.target.value.toUpperCase())}
+                onChange={event => {
+                    const nextGuess = event.target.value.toUpperCase();
+                    setGuess(nextGuess);
+                }}
             />
         </form>
     );
