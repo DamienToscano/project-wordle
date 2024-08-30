@@ -1,13 +1,30 @@
-import React from 'react';
+import { useContext } from 'react';
 import { range } from '../../utils';
+import { checkGuess } from '../../game-helpers';
+import { AnswerContext } from '../../contexts/answerContext';
 
-function Guess({word}) {
+function Cell({ letter, status }) {
+    const className = status
+        ? `cell ${status}`
+        : 'cell';
+
+    return (
+        <span className={className}>{letter}</span>
+    );
+}
+
+function Guess({ word }) {
+    const answer = useContext(AnswerContext);
+    const check = word ? checkGuess(word, answer) : null;
+
     return (
         <p className="guess">
             {range(5).map(number => (
-                <span key={number} className="cell">
-                    { word ? word[number] : undefined }
-                </span>
+                <Cell
+                    key={number}
+                    letter={check?.[number].letter}
+                    status={check?.[number].status}
+                />
             ))}
         </p>
     );

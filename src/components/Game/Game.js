@@ -3,6 +3,7 @@ import React from 'react';
 import { sample } from '../../utils';
 import { WORDS } from '../../data';
 import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
+import { AnswerContext } from '../../contexts/answerContext';
 import GuessInput from '../GuessInput';
 import GuessResults from '../GuessResults';
 
@@ -37,7 +38,9 @@ function Game() {
 
     return (
         <>
-            <GuessResults guesses={guesses} />
+            <AnswerContext.Provider value={answer}>
+                <GuessResults guesses={guesses} />
+            </AnswerContext.Provider>
             <GuessInput disabled={disabled} addGuess={addGuess} />
         </>
     );
