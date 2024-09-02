@@ -39,8 +39,14 @@ function Game() {
         }
     }
 
+    function restart() {
+        setGuesses([]);
+        setStatus('running');
+    }
+
     return (
         <>
+            <button className='restart-button' onClick={() => restart()}>Restart</button>
             <AnswerContext.Provider value={answer}>
                 <GuessResults guesses={guesses} />
             </AnswerContext.Provider>
