@@ -2,6 +2,14 @@ import React from 'react';
 
 function GuessInput({addGuess, disabled}) {
     const [guess, setGuess] = React.useState('');
+    const input = React.useRef(null);
+
+    // Automatically focus the input when the game starts.
+    React.useEffect(() => {
+        if (!disabled) {
+            input.current.focus();
+        }
+    }, [disabled]);
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -16,6 +24,7 @@ function GuessInput({addGuess, disabled}) {
         >
             <label htmlFor="guess-input">Enter guess:</label>
             <input
+                ref={input}
                 required
                 disabled={disabled}
                 id="guess-input"
