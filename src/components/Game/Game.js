@@ -6,6 +6,8 @@ import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
 import { AnswerContext } from '../../contexts/answerContext';
 import GuessInput from '../GuessInput';
 import GuessResults from '../GuessResults';
+import WonBanner from '../WonBanner';
+import LostBanner from '../LostBanner';
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
@@ -14,16 +16,9 @@ console.info({ answer });
 
 function Game() {
     const [guesses, setGuesses] = React.useState([]);
-    const remainingGuesses = NUM_OF_GUESSES_ALLOWED - guesses.length;
-    const disabled = remainingGuesses === 0;
+    const [status, setStatus] = React.useState('running');
 
     function addGuess(guess) {
-
-        if (guesses.length === NUM_OF_GUESSES_ALLOWED) {
-            alert('You have no more guesses left!');
-            return;
-        }
-
         if (guesses.some(({ value }) => value === guess)) {
             alert('You already guessed that word!');
             return;
@@ -33,7 +28,15 @@ function Game() {
             id: crypto.randomUUID(),
             value: guess,
         };
-        setGuesses([...guesses, newGuess]);
+
+        const nextGuesses = [...guesses, newGuess];
+        setGuesses(nextGuesses);
+
+        if (guess.toUpperCase() === answer) {
+            setStatus('won');
+        } else if (nextGuesses.length === NUM_OF_GUESSES_ALLOWED) {
+            setStatus('lost');
+        }
     }
 
     return (
@@ -41,7 +44,9 @@ function Game() {
             <AnswerContext.Provider value={answer}>
                 <GuessResults guesses={guesses} />
             </AnswerContext.Provider>
-            <GuessInput disabled={disabled} addGuess={addGuess} />
+            <GuessInput disabled={status !== 'running'} addGuess={addGuess} />
+            {status === 'won' && <WonBanner triesNumber={guesses.length} />}
+            {status === 'lost' && <LostBanner answer={answer} />}
         </>
     );
 }
